@@ -9,6 +9,7 @@ class ExpoLiquidGlassButtonView: ExpoView {
   private var textSize: CGFloat = 16.0
   private var icon: String?
   private var iconOnly: Bool = false
+  private var iconSize: CGFloat = 16.0
   
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -58,6 +59,11 @@ class ExpoLiquidGlassButtonView: ExpoView {
     buttonImplementation.setIconOnly(iconOnly)
   }
   
+  func setIconSize(_ iconSize: Double) {
+    self.iconSize = CGFloat(iconSize)
+    buttonImplementation.setIconSize(self.iconSize)
+  }
+  
   override func layoutSubviews() {
     super.layoutSubviews()
     buttonImplementation.layoutSubviews(bounds: bounds)
@@ -72,6 +78,7 @@ protocol ButtonImplementation {
   func setTextSize(_ textSize: CGFloat)
   func setIcon(_ icon: String)
   func setIconOnly(_ iconOnly: Bool)
+  func setIconSize(_ iconSize: CGFloat)
   func layoutSubviews(bounds: CGRect)
 }
 
@@ -81,6 +88,7 @@ class LiquidGlassButton: ButtonImplementation {
   private var isRound: Bool = false
   private var textSize: CGFloat = 16.0
   private var icon: String?
+  private var iconSize: CGFloat = 16.0
   
   private var glassButton: UIButton!
   
@@ -156,7 +164,8 @@ class LiquidGlassButton: ButtonImplementation {
     var config = glassButton.configuration
     config?.image = UIImage(systemName: icon)
     config?.imagePlacement = .leading
-    config?.imagePadding = 8
+    config?.imagePadding = 4
+    config?.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: iconSize)
     glassButton.configuration = config
   }
   
@@ -173,6 +182,13 @@ class LiquidGlassButton: ButtonImplementation {
     glassButton.configuration = config
   }
   
+  func setIconSize(_ iconSize: CGFloat) {
+    self.iconSize = iconSize
+    var config = glassButton.configuration
+    config?.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: iconSize)
+    glassButton.configuration = config
+  }
+  
   func layoutSubviews(bounds: CGRect) {
     if isRound {
       glassButton.layer.cornerRadius = min(glassButton.bounds.width, glassButton.bounds.height) / 2
@@ -185,6 +201,7 @@ class FallbackButton: ButtonImplementation {
   private var isRound: Bool = false
   private var textSize: CGFloat = 16.0
   private var icon: String?
+  private var iconSize: CGFloat = 16.0
   
   private var button: UIButton!
   
@@ -262,7 +279,8 @@ class FallbackButton: ButtonImplementation {
     var config = button.configuration
     config?.image = UIImage(systemName: icon)
     config?.imagePlacement = .leading
-    config?.imagePadding = 8
+    config?.imagePadding = 4
+    config?.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: iconSize)
     button.configuration = config
   }
   
@@ -276,6 +294,13 @@ class FallbackButton: ButtonImplementation {
       config?.imagePlacement = .leading
       config?.imagePadding = 4
     }
+    button.configuration = config
+  }
+  
+  func setIconSize(_ iconSize: CGFloat) {
+    self.iconSize = iconSize
+    var config = button.configuration
+    config?.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: iconSize)
     button.configuration = config
   }
   

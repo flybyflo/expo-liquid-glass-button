@@ -110,6 +110,28 @@ export default function App() {
             />
           </View>
         </Group>
+        <Group name="Different Icon Sizes">
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+            <ExpoLiquidGlassButtonView
+              icon="star.fill"
+              iconSize={12}
+              onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Small star pressed: ${buttonPressed}`)}
+              style={styles.iconButton}
+            />
+            <ExpoLiquidGlassButtonView
+              icon="star.fill"
+              iconSize={20}
+              onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Medium star pressed: ${buttonPressed}`)}
+              style={styles.iconButton}
+            />
+            <ExpoLiquidGlassButtonView
+              icon="star.fill"
+              iconSize={32}
+              onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Large star pressed: ${buttonPressed}`)}
+              style={styles.iconButton}
+            />
+          </View>
+        </Group>
       </ScrollView>
     </SafeAreaView>
   );

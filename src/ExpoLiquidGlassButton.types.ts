@@ -20,4 +20,5 @@ export type ExpoLiquidGlassButtonViewProps = {
   textSize?: number;
   icon?: string;
   iconOnly?: boolean;
+  iconSize?: number;
 };
