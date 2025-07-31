@@ -10,10 +10,14 @@ class ExpoLiquidGlassButtonView: ExpoView {
   private var icon: String?
   private var iconOnly: Bool = false
   private var iconSize: CGFloat = 16.0
+  private var buttonBackgroundColor: UIColor = UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
+  private var buttonTextColor: UIColor = UIColor.white
+  private var buttonIconColor: UIColor = UIColor.white
   
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
     clipsToBounds = true
+    backgroundColor = UIColor.clear
     setupButtonImplementation()
   }
   
@@ -24,6 +28,11 @@ class ExpoLiquidGlassButtonView: ExpoView {
       buttonImplementation = FallbackButton(parent: self)
     }
     buttonImplementation.setup()
+    
+    // Apply current color values after setup
+    buttonImplementation.setBackgroundColor(buttonBackgroundColor)
+    buttonImplementation.setTextColor(buttonTextColor)
+    buttonImplementation.setIconColor(buttonIconColor)
   }
   
   @objc internal func buttonTapped() {
@@ -64,6 +73,21 @@ class ExpoLiquidGlassButtonView: ExpoView {
     buttonImplementation.setIconSize(self.iconSize)
   }
   
+  func setBackgroundColor(_ colorString: String) {
+    self.buttonBackgroundColor = UIColor(hexString: colorString) ?? UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
+    buttonImplementation.setBackgroundColor(self.buttonBackgroundColor)
+  }
+  
+  func setTextColor(_ colorString: String) {
+    self.buttonTextColor = UIColor(hexString: colorString) ?? UIColor.white
+    buttonImplementation.setTextColor(self.buttonTextColor)
+  }
+  
+  func setIconColor(_ colorString: String) {
+    self.buttonIconColor = UIColor(hexString: colorString) ?? UIColor.white
+    buttonImplementation.setIconColor(self.buttonIconColor)
+  }
+  
   override func layoutSubviews() {
     super.layoutSubviews()
     buttonImplementation.layoutSubviews(bounds: bounds)
@@ -79,6 +103,9 @@ protocol ButtonImplementation {
   func setIcon(_ icon: String)
   func setIconOnly(_ iconOnly: Bool)
   func setIconSize(_ iconSize: CGFloat)
+  func setBackgroundColor(_ color: UIColor)
+  func setTextColor(_ color: UIColor)
+  func setIconColor(_ color: UIColor)
   func layoutSubviews(bounds: CGRect)
 }
 
@@ -89,6 +116,9 @@ class LiquidGlassButton: ButtonImplementation {
   private var textSize: CGFloat = 16.0
   private var icon: String?
   private var iconSize: CGFloat = 16.0
+  private var buttonBackgroundColor: UIColor = UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
+  private var buttonTextColor: UIColor = UIColor.white
+  private var buttonIconColor: UIColor = UIColor.white
   
   private var glassButton: UIButton!
   
@@ -98,7 +128,8 @@ class LiquidGlassButton: ButtonImplementation {
     
     var config = UIButton.Configuration.prominentGlass()
     config.title = ""
-    config.baseBackgroundColor = UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
+    config.baseBackgroundColor = buttonBackgroundColor
+    config.baseForegroundColor = buttonTextColor
     config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
       outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
@@ -189,6 +220,27 @@ class LiquidGlassButton: ButtonImplementation {
     glassButton.configuration = config
   }
   
+  func setBackgroundColor(_ color: UIColor) {
+    self.buttonBackgroundColor = color
+    var config = glassButton.configuration
+    config?.baseBackgroundColor = color
+    glassButton.configuration = config
+  }
+  
+  func setTextColor(_ color: UIColor) {
+    self.buttonTextColor = color
+    var config = glassButton.configuration
+    config?.baseForegroundColor = color
+    glassButton.configuration = config
+  }
+  
+  func setIconColor(_ color: UIColor) {
+    self.buttonIconColor = color
+    var config = glassButton.configuration
+    config?.baseForegroundColor = color
+    glassButton.configuration = config
+  }
+  
   func layoutSubviews(bounds: CGRect) {
     if isRound {
       glassButton.layer.cornerRadius = min(glassButton.bounds.width, glassButton.bounds.height) / 2
@@ -202,6 +254,9 @@ class FallbackButton: ButtonImplementation {
   private var textSize: CGFloat = 16.0
   private var icon: String?
   private var iconSize: CGFloat = 16.0
+  private var buttonBackgroundColor: UIColor = UIColor.systemBlue
+  private var buttonTextColor: UIColor = UIColor.white
+  private var buttonIconColor: UIColor = UIColor.white
   
   private var button: UIButton!
   
@@ -211,8 +266,8 @@ class FallbackButton: ButtonImplementation {
     
     var config = UIButton.Configuration.filled()
     config.title = ""
-    config.baseBackgroundColor = UIColor.systemBlue
-    config.baseForegroundColor = UIColor.white
+    config.baseBackgroundColor = buttonBackgroundColor
+    config.baseForegroundColor = buttonTextColor
     config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
       outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
@@ -304,9 +359,57 @@ class FallbackButton: ButtonImplementation {
     button.configuration = config
   }
   
+  func setBackgroundColor(_ color: UIColor) {
+    self.buttonBackgroundColor = color
+    var config = button.configuration
+    config?.baseBackgroundColor = color
+    button.configuration = config
+  }
+  
+  func setTextColor(_ color: UIColor) {
+    self.buttonTextColor = color
+    var config = button.configuration
+    config?.baseForegroundColor = color
+    button.configuration = config
+  }
+  
+  func setIconColor(_ color: UIColor) {
+    self.buttonIconColor = color
+    var config = button.configuration
+    config?.baseForegroundColor = color
+    button.configuration = config
+  }
+  
   func layoutSubviews(bounds: CGRect) {
     if isRound {
       button.layer.cornerRadius = min(button.bounds.width, button.bounds.height) / 2
     }
   }
+}
+
+// MARK: - UIColor Extension for Hex String Support
+extension UIColor {
+    convenience init?(hexString: String) {
+        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b, a: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (r, g, b, a) = ((int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17, 255)
+        case 6: // RGB (24-bit)
+            (r, g, b, a) = (int >> 16, int >> 8 & 0xFF, int & 0xFF, 255)
+        case 8: // RGBA (32-bit)
+            (r, g, b, a) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            return nil
+        }
+        
+        self.init(
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            alpha: Double(a) / 255
+        )
+    }
 }

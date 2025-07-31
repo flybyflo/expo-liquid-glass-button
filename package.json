@@ -19,7 +19,12 @@
     "react-native",
     "expo",
     "expo-liquid-glass-button",
-    "ExpoLiquidGlassButton"
+    "ExpoLiquidGlassButton",
+    "cross-platform",
+    "button",
+    "ios",
+    "android",
+    "web"
   ],
   "repository": "https://github.com/flybyflo/expo-liquid-glass-button",
   "bugs": {

@@ -65,6 +65,21 @@ public class ExpoLiquidGlassButtonModule: Module {
         view.setIconSize(iconSize)
       }
 
+      // Defines a setter for the `backgroundColor` prop.
+      Prop("backgroundColor") { (view: ExpoLiquidGlassButtonView, backgroundColor: String) in
+        view.setBackgroundColor(backgroundColor)
+      }
+
+      // Defines a setter for the `textColor` prop.
+      Prop("textColor") { (view: ExpoLiquidGlassButtonView, textColor: String) in
+        view.setTextColor(textColor)
+      }
+
+      // Defines a setter for the `iconColor` prop.
+      Prop("iconColor") { (view: ExpoLiquidGlassButtonView, iconColor: String) in
+        view.setIconColor(iconColor)
+      }
+
       Events("onButtonPress")
     }
   }

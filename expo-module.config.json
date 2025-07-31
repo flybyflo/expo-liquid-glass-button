@@ -1,6 +1,12 @@
 {
-  "platforms": ["apple"],
+  "platforms": ["apple", "android", "web"],
   "apple": {
+    "modules": ["ExpoLiquidGlassButtonModule"]
+  },
+  "android": {
+    "modules": ["ExpoLiquidGlassButtonModule"]
+  },
+  "web": {
     "modules": ["ExpoLiquidGlassButtonModule"]
   }
 }
