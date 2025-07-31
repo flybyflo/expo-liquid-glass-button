@@ -18,4 +18,6 @@ export type ExpoLiquidGlassButtonViewProps = {
   style?: StyleProp<ViewStyle>;
   isRound?: boolean;
   textSize?: number;
+  icon?: string;
+  iconOnly?: boolean;
 };

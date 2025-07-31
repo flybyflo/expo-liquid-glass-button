@@ -50,6 +50,10 @@ class ExpoLiquidGlassButtonModule : Module() {
       Prop("textSize") { view: ExpoLiquidGlassButtonView, textSize: Double ->
         view.setTextSize(textSize)
       }
+      // Defines a setter for the `icon` prop.
+      Prop("icon") { view: ExpoLiquidGlassButtonView, icon: String ->
+        view.setIcon(icon)
+      }
       // Defines an event that the view can send to JavaScript.
       Events("onButtonPress")
     }

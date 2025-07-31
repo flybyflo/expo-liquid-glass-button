@@ -50,6 +50,16 @@ public class ExpoLiquidGlassButtonModule: Module {
         view.setTextSize(textSize)
       }
 
+      // Defines a setter for the `icon` prop.
+      Prop("icon") { (view: ExpoLiquidGlassButtonView, icon: String) in
+        view.setIcon(icon)
+      }
+
+      // Defines a setter for the `iconOnly` prop.
+      Prop("iconOnly") { (view: ExpoLiquidGlassButtonView, iconOnly: Bool) in
+        view.setIconOnly(iconOnly)
+      }
+
       Events("onButtonPress")
     }
   }

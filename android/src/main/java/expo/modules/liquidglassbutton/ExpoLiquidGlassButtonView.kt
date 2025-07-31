@@ -43,4 +43,10 @@ class ExpoLiquidGlassButtonView(context: Context, appContext: AppContext) : Expo
   fun setTextSize(textSize: Double) {
     button.textSize = textSize.toFloat()
   }
+  
+  fun setIcon(icon: String) {
+    // For Android, we'll use a simple approach with text-based icons
+    // In a real implementation, you might want to use a proper icon library
+    button.text = "$icon ${button.text}"
+  }
 }
