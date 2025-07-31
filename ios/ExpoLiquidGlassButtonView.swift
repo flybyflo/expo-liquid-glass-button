@@ -13,6 +13,8 @@ class ExpoLiquidGlassButtonView: ExpoView {
   private var buttonBackgroundColor: UIColor = UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
   private var buttonTextColor: UIColor = UIColor.white
   private var buttonIconColor: UIColor = UIColor.white
+  private var hasCustomBackgroundColor: Bool = false
+  private var hasCustomTextColor: Bool = false
   
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -30,8 +32,8 @@ class ExpoLiquidGlassButtonView: ExpoView {
     buttonImplementation.setup()
     
     // Apply current color values after setup
-    buttonImplementation.setBackgroundColor(buttonBackgroundColor)
-    buttonImplementation.setTextColor(buttonTextColor)
+    buttonImplementation.setBackgroundColor(buttonBackgroundColor, isCustom: hasCustomBackgroundColor)
+    buttonImplementation.setTextColor(buttonTextColor, isCustom: hasCustomTextColor)
     buttonImplementation.setIconColor(buttonIconColor)
   }
   
@@ -75,12 +77,14 @@ class ExpoLiquidGlassButtonView: ExpoView {
   
   func setBackgroundColor(_ colorString: String) {
     self.buttonBackgroundColor = UIColor(hexString: colorString) ?? UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
-    buttonImplementation.setBackgroundColor(self.buttonBackgroundColor)
+    self.hasCustomBackgroundColor = true
+    buttonImplementation.setBackgroundColor(self.buttonBackgroundColor, isCustom: self.hasCustomBackgroundColor)
   }
   
   func setTextColor(_ colorString: String) {
     self.buttonTextColor = UIColor(hexString: colorString) ?? UIColor.white
-    buttonImplementation.setTextColor(self.buttonTextColor)
+    self.hasCustomTextColor = true
+    buttonImplementation.setTextColor(self.buttonTextColor, isCustom: self.hasCustomTextColor)
   }
   
   func setIconColor(_ colorString: String) {
@@ -103,8 +107,8 @@ protocol ButtonImplementation {
   func setIcon(_ icon: String)
   func setIconOnly(_ iconOnly: Bool)
   func setIconSize(_ iconSize: CGFloat)
-  func setBackgroundColor(_ color: UIColor)
-  func setTextColor(_ color: UIColor)
+  func setBackgroundColor(_ color: UIColor, isCustom: Bool)
+  func setTextColor(_ color: UIColor, isCustom: Bool)
   func setIconColor(_ color: UIColor)
   func layoutSubviews(bounds: CGRect)
 }
@@ -119,6 +123,7 @@ class LiquidGlassButton: ButtonImplementation {
   private var buttonBackgroundColor: UIColor = UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
   private var buttonTextColor: UIColor = UIColor.white
   private var buttonIconColor: UIColor = UIColor.white
+  private var hasCustomColors: Bool = false
   
   private var glassButton: UIButton!
   
@@ -126,10 +131,15 @@ class LiquidGlassButton: ButtonImplementation {
     let button = UIButton(type: .system)
     button.translatesAutoresizingMaskIntoConstraints = false
     
-    var config = UIButton.Configuration.prominentGlass()
+    var config: UIButton.Configuration
+    if hasCustomColors {
+      config = UIButton.Configuration.prominentGlass()
+      config.baseBackgroundColor = buttonBackgroundColor
+      config.baseForegroundColor = buttonTextColor
+    } else {
+      config = UIButton.Configuration.glass()
+    }
     config.title = ""
-    config.baseBackgroundColor = buttonBackgroundColor
-    config.baseForegroundColor = buttonTextColor
     config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
       outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
@@ -220,17 +230,35 @@ class LiquidGlassButton: ButtonImplementation {
     glassButton.configuration = config
   }
   
-  func setBackgroundColor(_ color: UIColor) {
+  func setBackgroundColor(_ color: UIColor, isCustom: Bool) {
     self.buttonBackgroundColor = color
-    var config = glassButton.configuration
-    config?.baseBackgroundColor = color
-    glassButton.configuration = config
+    self.hasCustomColors = isCustom
+    
+    // Recreate button with appropriate configuration
+    if let parent = parent {
+      glassButton.removeFromSuperview()
+      glassButton = createGlassButton()
+      parent.addSubview(glassButton)
+      
+      NSLayoutConstraint.activate([
+        glassButton.topAnchor.constraint(equalTo: parent.topAnchor, constant: 16),
+        glassButton.bottomAnchor.constraint(equalTo: parent.bottomAnchor, constant: -16),
+        glassButton.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 16),
+        glassButton.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: -16)
+      ])
+      
+      glassButton.addTarget(parent, action: #selector(parent.buttonTapped), for: .touchUpInside)
+    }
   }
   
-  func setTextColor(_ color: UIColor) {
+  func setTextColor(_ color: UIColor, isCustom: Bool) {
     self.buttonTextColor = color
+    self.hasCustomColors = isCustom
+    
     var config = glassButton.configuration
-    config?.baseForegroundColor = color
+    if hasCustomColors {
+      config?.baseForegroundColor = color
+    }
     glassButton.configuration = config
   }
   
@@ -359,14 +387,14 @@ class FallbackButton: ButtonImplementation {
     button.configuration = config
   }
   
-  func setBackgroundColor(_ color: UIColor) {
+  func setBackgroundColor(_ color: UIColor, isCustom: Bool) {
     self.buttonBackgroundColor = color
     var config = button.configuration
     config?.baseBackgroundColor = color
     button.configuration = config
   }
   
-  func setTextColor(_ color: UIColor) {
+  func setTextColor(_ color: UIColor, isCustom: Bool) {
     self.buttonTextColor = color
     var config = button.configuration
     config?.baseForegroundColor = color
