@@ -35,14 +35,17 @@ public class ExpoLiquidGlassButtonModule: Module {
     // Enables the module to be used as a native view. Definition components that are accepted as part of the
     // view definition: Prop, Events.
     View(ExpoLiquidGlassButtonView.self) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { (view: ExpoLiquidGlassButtonView, url: URL) in
-        if view.webView.url != url {
-          view.webView.load(URLRequest(url: url))
-        }
+      // Defines a setter for the `title` prop.
+      Prop("title") { (view: ExpoLiquidGlassButtonView, title: String) in
+        view.setTitle(title)
       }
 
-      Events("onLoad")
+      // Defines a setter for the `isRound` prop.
+      Prop("isRound") { (view: ExpoLiquidGlassButtonView, isRound: Bool) in
+        view.setIsRound(isRound)
+      }
+
+      Events("onButtonPress")
     }
   }
 }

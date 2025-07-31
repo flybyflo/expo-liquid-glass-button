@@ -28,9 +28,17 @@ export default function App() {
         </Group>
         <Group name="Views">
           <ExpoLiquidGlassButtonView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
+            title="Liquid Glass Button"
+            onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Button pressed: ${buttonPressed}`)}
+            style={styles.button}
+          />
+        </Group>
+        <Group name="Round Button">
+          <ExpoLiquidGlassButtonView
+            title="x"
+            isRound={true}
+            onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Round button pressed: ${buttonPressed}`)}
+            style={styles.roundButton}
           />
         </Group>
       </ScrollView>
@@ -68,6 +76,15 @@ const styles = {
   },
   view: {
     flex: 1,
-    height: 200,
+    height: 100,
+  },
+  button: {
+    height: 60,
+    width: 250,
+  },
+  roundButton: {
+    height: 80,
+    width: 80,
+    alignSelf: 'center' as const,
   },
 };

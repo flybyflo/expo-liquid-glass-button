@@ -1,7 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-export type OnLoadEventPayload = {
-  url: string;
+export type OnPressEventPayload = {
+  buttonPressed: boolean;
 };
 
 export type ExpoLiquidGlassButtonModuleEvents = {
@@ -13,7 +13,8 @@ export type ChangeEventPayload = {
 };
 
 export type ExpoLiquidGlassButtonViewProps = {
-  url: string;
-  onLoad: (event: { nativeEvent: OnLoadEventPayload }) => void;
+  title?: string;
+  onButtonPress?: (event: { nativeEvent: OnPressEventPayload }) => void;
   style?: StyleProp<ViewStyle>;
+  isRound?: boolean;
 };

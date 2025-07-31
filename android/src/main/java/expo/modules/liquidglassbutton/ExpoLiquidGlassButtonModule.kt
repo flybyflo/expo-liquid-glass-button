@@ -2,7 +2,6 @@ package expo.modules.liquidglassbutton
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.URL
 
 class ExpoLiquidGlassButtonModule : Module() {
   // Each module class must implement the definition function. The definition consists of components
@@ -39,12 +38,16 @@ class ExpoLiquidGlassButtonModule : Module() {
     // Enables the module to be used as a native view. Definition components that are accepted as part of
     // the view definition: Prop, Events.
     View(ExpoLiquidGlassButtonView::class) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { view: ExpoLiquidGlassButtonView, url: URL ->
-        view.webView.loadUrl(url.toString())
+      // Defines a setter for the `title` prop.
+      Prop("title") { view: ExpoLiquidGlassButtonView, title: String ->
+        view.button.text = title
+      }
+      // Defines a setter for the `isRound` prop.
+      Prop("isRound") { view: ExpoLiquidGlassButtonView, isRound: Boolean ->
+        view.setIsRound(isRound)
       }
       // Defines an event that the view can send to JavaScript.
-      Events("onLoad")
+      Events("onButtonPress")
     }
   }
 }
