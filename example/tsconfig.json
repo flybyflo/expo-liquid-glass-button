@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-liquid-glass-button": ["../src/index"],
+      "expo-liquid-glass-button/*": ["../src/*"]
+    }
+  }
+}
