@@ -46,6 +46,10 @@ class ExpoLiquidGlassButtonModule : Module() {
       Prop("isRound") { view: ExpoLiquidGlassButtonView, isRound: Boolean ->
         view.setIsRound(isRound)
       }
+      // Defines a setter for the `textSize` prop.
+      Prop("textSize") { view: ExpoLiquidGlassButtonView, textSize: Double ->
+        view.setTextSize(textSize)
+      }
       // Defines an event that the view can send to JavaScript.
       Events("onButtonPress")
     }

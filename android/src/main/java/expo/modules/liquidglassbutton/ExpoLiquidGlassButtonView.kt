@@ -39,4 +39,8 @@ class ExpoLiquidGlassButtonView(context: Context, appContext: AppContext) : Expo
       button.radius = 0f
     }
   }
+  
+  fun setTextSize(textSize: Double) {
+    button.textSize = textSize.toFloat()
+  }
 }

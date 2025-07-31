@@ -17,4 +17,5 @@ export type ExpoLiquidGlassButtonViewProps = {
   onButtonPress?: (event: { nativeEvent: OnPressEventPayload }) => void;
   style?: StyleProp<ViewStyle>;
   isRound?: boolean;
+  textSize?: number;
 };

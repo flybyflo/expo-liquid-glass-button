@@ -6,6 +6,7 @@ class ExpoLiquidGlassButtonView: ExpoView {
   
   private var buttonImplementation: ButtonImplementation!
   private var isRound: Bool = false
+  private var textSize: CGFloat = 16.0
   
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -35,6 +36,11 @@ class ExpoLiquidGlassButtonView: ExpoView {
     buttonImplementation.setIsRound(isRound)
   }
   
+  func setTextSize(_ textSize: Double) {
+    self.textSize = CGFloat(textSize)
+    buttonImplementation.setTextSize(self.textSize)
+  }
+  
   override func layoutSubviews() {
     super.layoutSubviews()
     buttonImplementation.layoutSubviews(bounds: bounds)
@@ -45,6 +51,7 @@ protocol ButtonImplementation {
   func setup()
   func setTitle(_ title: String)
   func setIsRound(_ isRound: Bool)
+  func setTextSize(_ textSize: CGFloat)
   func layoutSubviews(bounds: CGRect)
 }
 
@@ -52,23 +59,26 @@ protocol ButtonImplementation {
 class LiquidGlassButton: ButtonImplementation {
   private weak var parent: ExpoLiquidGlassButtonView?
   private var isRound: Bool = false
+  private var textSize: CGFloat = 16.0
   
-  private let glassButton: UIButton = {
+  private var glassButton: UIButton!
+  
+  private func createGlassButton() -> UIButton {
     let button = UIButton(type: .system)
     button.translatesAutoresizingMaskIntoConstraints = false
     
     var config = UIButton.Configuration.glass()
     config.title = "Button"
     config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-    config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+    config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
-      outgoing.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+      outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
       return outgoing
     }
     
     button.configuration = config
     return button
-  }()
+  }
   
   init(parent: ExpoLiquidGlassButtonView) {
     self.parent = parent
@@ -77,6 +87,7 @@ class LiquidGlassButton: ButtonImplementation {
   func setup() {
     guard let parent = parent else { return }
     
+    glassButton = createGlassButton()
     parent.addSubview(glassButton)
     
     NSLayoutConstraint.activate([
@@ -104,6 +115,17 @@ class LiquidGlassButton: ButtonImplementation {
     }
   }
   
+  func setTextSize(_ textSize: CGFloat) {
+    self.textSize = textSize
+    var config = glassButton.configuration
+    config?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
+      var outgoing = incoming
+      outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
+      return outgoing
+    }
+    glassButton.configuration = config
+  }
+  
   func layoutSubviews(bounds: CGRect) {
     if isRound {
       glassButton.layer.cornerRadius = min(glassButton.bounds.width, glassButton.bounds.height) / 2
@@ -114,8 +136,11 @@ class LiquidGlassButton: ButtonImplementation {
 class FallbackButton: ButtonImplementation {
   private weak var parent: ExpoLiquidGlassButtonView?
   private var isRound: Bool = false
+  private var textSize: CGFloat = 16.0
   
-  private let button: UIButton = {
+  private var button: UIButton!
+  
+  private func createButton() -> UIButton {
     let btn = UIButton(type: .system)
     btn.translatesAutoresizingMaskIntoConstraints = false
     
@@ -124,16 +149,16 @@ class FallbackButton: ButtonImplementation {
     config.baseBackgroundColor = UIColor.systemBlue
     config.baseForegroundColor = UIColor.white
     config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-    config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+    config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
-      outgoing.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+      outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
       return outgoing
     }
     config.cornerStyle = .capsule
     
     btn.configuration = config
     return btn
-  }()
+  }
   
   init(parent: ExpoLiquidGlassButtonView) {
     self.parent = parent
@@ -142,6 +167,7 @@ class FallbackButton: ButtonImplementation {
   func setup() {
     guard let parent = parent else { return }
     
+    button = createButton()
     parent.addSubview(button)
     
     NSLayoutConstraint.activate([
@@ -167,6 +193,17 @@ class FallbackButton: ButtonImplementation {
       button.layer.cornerRadius = 0
       button.clipsToBounds = false
     }
+  }
+  
+  func setTextSize(_ textSize: CGFloat) {
+    self.textSize = textSize
+    var config = button.configuration
+    config?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
+      var outgoing = incoming
+      outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
+      return outgoing
+    }
+    button.configuration = config
   }
   
   func layoutSubviews(bounds: CGRect) {

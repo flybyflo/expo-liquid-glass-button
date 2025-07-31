@@ -45,6 +45,11 @@ public class ExpoLiquidGlassButtonModule: Module {
         view.setIsRound(isRound)
       }
 
+      // Defines a setter for the `textSize` prop.
+      Prop("textSize") { (view: ExpoLiquidGlassButtonView, textSize: Double) in
+        view.setTextSize(textSize)
+      }
+
       Events("onButtonPress")
     }
   }

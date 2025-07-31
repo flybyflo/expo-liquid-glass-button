@@ -41,6 +41,14 @@ export default function App() {
             style={styles.roundButton}
           />
         </Group>
+        <Group name="Large Text Button">
+          <ExpoLiquidGlassButtonView
+            title="Large Text"
+            textSize={24}
+            onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Large text button pressed: ${buttonPressed}`)}
+            style={styles.button}
+          />
+        </Group>
       </ScrollView>
     </SafeAreaView>
   );

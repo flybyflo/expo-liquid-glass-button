@@ -11,7 +11,7 @@ export default function ExpoLiquidGlassButtonView(props: ExpoLiquidGlassButtonVi
         color: 'white',
         border: 'none',
         borderRadius: props.isRound ? '50%' : 8,
-        fontSize: 16,
+        fontSize: props.textSize || 16,
         cursor: 'pointer',
         width: props.isRound ? '60px' : 'auto',
         height: props.isRound ? '60px' : 'auto',
