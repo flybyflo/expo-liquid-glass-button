@@ -67,9 +67,9 @@ class LiquidGlassButton: ButtonImplementation {
     let button = UIButton(type: .system)
     button.translatesAutoresizingMaskIntoConstraints = false
     
-    var config = UIButton.Configuration.glass()
+    var config = UIButton.Configuration.prominentGlass()
     config.title = "Button"
-    config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+    config.baseBackgroundColor = UIColor(red: 1.0, green: 0.455, blue: 0.529, alpha: 1.0)
     config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
       outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)
@@ -148,7 +148,6 @@ class FallbackButton: ButtonImplementation {
     config.title = "Button"
     config.baseBackgroundColor = UIColor.systemBlue
     config.baseForegroundColor = UIColor.white
-    config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
     config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { [weak self] incoming in
       var outgoing = incoming
       outgoing.font = UIFont.systemFont(ofSize: self?.textSize ?? 16, weight: .medium)

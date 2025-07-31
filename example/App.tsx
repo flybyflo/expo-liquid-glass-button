@@ -37,6 +37,7 @@ export default function App() {
           <ExpoLiquidGlassButtonView
             title="x"
             isRound={true}
+            textSize={32}
             onButtonPress={({ nativeEvent: { buttonPressed } }) => console.log(`Round button pressed: ${buttonPressed}`)}
             style={styles.roundButton}
           />
