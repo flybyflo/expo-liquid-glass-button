@@ -33,7 +33,9 @@
   "author": "Florian Ritzmaier <flo.ritzmaier@gmail.com> (https://github.com/flybyflo)",
   "license": "MIT",
   "homepage": "https://github.com/flybyflo/expo-liquid-glass-button#readme",
-  "dependencies": {},
+  "dependencies": {
+    "expo-updates": "~0.28.17"
+  },
   "devDependencies": {
     "@types/react": "~19.0.0",
     "expo-module-scripts": "^4.1.9",
